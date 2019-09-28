@@ -1,36 +1,44 @@
-# python-metahash
-Library for MetaHash in Python
+Библиотека функций MetaHash
 
 Генерация ключей
 
-+    metahash.gen_pem ()
-    генерирует приватный ключ pem
-
-+    metahash.get_pub ( prvpem )
-    получает pub ключ из приватного pem
-
-+    metahash.get_address ( pubpem )
-    получает MetaHash адрес
-
-+    metahash.pem_to_ecpriv ( prvpem )
-    получает приватный ключ для metagate с паролем
-
-+    metahash.ecpriv_to_pem ( ecpriv )
-    получает открытый приватный ключ prvpem
-
-+    metahash.pem_to_der ( prvpem )
-    получает приватный ключ в формате HEX
-
-    metahash.der_to_pem ( prvder )
-    получает pem из HEX
-
-*    metahash.pub_to_der ( pubder )
-    получает публичный ключ в формате HEX
-
-    metahash.generate ()
++    metahash.generate ()
     генерирует pem, pub ключи
 
+Конвертация ключей
+
++    metahash.get_address ( address+'.pub' )
+    получает MetaHash адрес из публичного ключа
+
++    metahash.pem_to_pub ( address+'.pem' )
+    получает pub ключ из приватного pem
+
++    metahash.pem_to_ecpriv ( address+'.pem', passwd )
+    получает приватный ключ для MetaGate с паролем
+
++    metahash.ecpriv_to_pem ( address+'.ec.priv', passwd )
+    получает открытый приватный ключ pem
+
++    metahash.pem_to_der ( address+'.pem' )
+    получает приватный ключ в формате HEX der
+
+*    metahash.pub_to_der ( address+'.pub' )
+    получает публичный ключ в формате HEX der
+
+    metahash.der_to_pem ( address+'.prv.der' )
+    получает pem из HEX der
+
 JSON запросы
+
+    metahash.fetch_balance ( net, address )
+
+    metahash.fetch_history ( net, address )
+
+    metahash.get_tx ( net, txhash )
+
+    metahash.create_tx ( net, to, value, privkey, nonce, fee, data )
+
+    metahash.send_tx ( net, to, value, privkey, nonce, fee, data )
 
     metahash.fetch_balance ( net, address )
 
