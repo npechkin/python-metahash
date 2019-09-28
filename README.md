@@ -28,7 +28,7 @@ Library for MetaHash in Python
     получает публичный ключ в формате HEX
 
     metahash.generate ()
-    генерирует prvpem, prvpub ключи
+    генерирует pem, pub ключи
 
 JSON запросы
 
