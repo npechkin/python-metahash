@@ -1,5 +1,6 @@
-# Test
+#!/usr/bin/python3
 
+import os
 import sys
 if sys.version_info < ( 3,5 ):
     print ( 'You use Python version lower than 3.5. For this script work use Python version 3.5 and more.' )
@@ -36,21 +37,14 @@ def hex_point_coordinate ( coordinate_value ):
     value_len = 64 - len(value_hex)
     return value_hex if value_len <= 0 else '0' * value_len + value_hex
 
-def gen_pem ():
-
+def generate ():
     private_key = ec.generate_private_key ( ec.SECP256K1(), default_backend() )
     private_key_pem = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    save_to_file ( private_key_pem.decode("utf-8"), 'mhc.pem' )
-#    save_to_file ( private_key_pem.decode("utf-8"), "%s.pem" % address )
-
-def get_pub ( prvpem ):
-    f = open ( prvpem )
-    prv_key = f.read()
-    prv_pem = prv_key.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
-    pub_key = prkey.public_key ()
-    pub_key_pem = pub_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
-    save_to_file ( pub_key_pem.decode("utf-8"), "mhc.pub" )
+    save_to_file ( private_key_pem.decode("utf-8"), 'tmp.pem' )
+    address = pem_to_pub ('tmp.pem')
+    save_to_file ( private_key_pem.decode("utf-8"), "%s.pem" % address )
+    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pem') )
+    return ( address )
 
 def get_address ( pubpem ):
     f = open ( pubpem )
@@ -68,40 +62,20 @@ def get_address ( pubpem ):
     resulrt_sha256rmd_again = hash_code(resulrt_sha256rmd.encode('utf-8'), 'sha256')
     first4_resulrt_sha256rmd_again = resulrt_sha256rmd_again[:8]
     address = '0x' + resulrt_rmd160 + first4_resulrt_sha256rmd_again
-    print ( address )
+    return ( address )
 
-def pub_to_der ( pubpem ):
-    f = open ( pubpem )
-    pkey = f.read()
-    pub_key_pem = pkey.encode("utf-8")
-    pub_key = load_pem_public_key ( pub_key_pem, backend=default_backend() )
-
-    pub_key_der = pub_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
-    pk_der = binascii.b2a_hex(pub_key_der).decode()
-    save_to_file ( pk_der, "mhc.pub.der" )
-#    print ( pk_der )
-
-def pem_to_der ( prvpem ):
+def pem_to_pub ( prvpem ):
     f = open ( prvpem )
     prv_key = f.read()
     prv_pem = prv_key.encode("utf-8")
     prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
-
-    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    pr_der = binascii.b2a_hex(private_key_der).decode()
-    save_to_file ( pr_der, "mhc.prv.der" )
-#    print ( pr_der )
-
-def ecpriv_to_pem ( ecpriv, passwd ):
-    f = open ( ecpriv )
-    ecprv_key = f.read()
-    prv_pem = ecprv_key.encode("utf-8")
-    passw = passwd.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=passw, backend=default_backend() )
-
-    private_key_pem = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    save_to_file ( private_key_pem.decode("utf-8"), 'mhc.pem' )
-#    print ( private_key_pem )
+    pub_key = prkey.public_key ()
+    pub_key_pem = pub_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
+    save_to_file ( pub_key_pem.decode("utf-8"), "tmp.pub" )
+    address = get_address ('tmp.pub')
+    save_to_file ( pub_key_pem.decode("utf-8"), "%s.pub" % address )
+    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pub') )
+    return ( address )
 
 def pem_to_ecpriv ( prvpem, passwd ):
     f = open ( prvpem )
@@ -111,8 +85,47 @@ def pem_to_ecpriv ( prvpem, passwd ):
     prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
 
     ec_priv = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
-    save_to_file ( ec_priv.decode("utf-8"), "mhc.ec.priv" )
-#    print ( ec_priv )
+    address = pem_to_pub ( prvpem )
+    save_to_file ( ec_priv.decode("utf-8"), "%s.ec.priv" % address )
+    return ( address )
+
+def ecpriv_to_pem ( ecpriv, passwd ):
+    f = open ( ecpriv )
+    ecprv_key = f.read()
+    prv_pem = ecprv_key.encode("utf-8")
+    passw = passwd.encode("utf-8")
+    prkey = load_pem_private_key ( prv_pem, password=passw, backend=default_backend() )
+
+    private_key_pem = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    save_to_file ( private_key_pem.decode("utf-8"), 'tmp.pem' )
+    address = pem_to_pub ( 'tmp.pem' )
+    save_to_file ( private_key_pem.decode("utf-8"), '%s.pem' % address )
+    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pem') )
+    return ( address )
+
+def pem_to_der ( prvpem ):
+    f = open ( prvpem )
+    prv_key = f.read()
+    prv_pem = prv_key.encode("utf-8")
+    prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
+
+    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    pr_der = binascii.b2a_hex(private_key_der).decode()
+    address = pem_to_pub ( prvpem )
+    save_to_file ( pr_der, "%s.prv.der" % address )
+    return ( address )
+
+def pub_to_der ( pubpem ):
+    f = open ( pubpem )
+    pkey = f.read()
+    pub_key_pem = pkey.encode("utf-8")
+    pub_key = load_pem_public_key ( pub_key_pem, backend=default_backend() )
+
+    pub_key_der = pub_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
+    pk_der = binascii.b2a_hex(pub_key_der).decode()
+    address = get_address ( pubpem )
+    save_to_file ( pk_der, "%s.pub.der" % address )
+    return ( address )
 
 def der_to_pem ( prvder ):
     f = open ( prvder )
@@ -133,7 +146,4 @@ def der_to_pem ( prvder ):
 #    save_to_file ( pr_der, "mhc.prv.der" )
 #    print ( pr_der )
 
-
-
-
-
+###########################    END    ############################
