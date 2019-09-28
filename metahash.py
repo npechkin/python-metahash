@@ -99,8 +99,6 @@ def ecpriv_to_pem ( ecpriv, passwd ):
     passw = passwd.encode("utf-8")
     prkey = load_pem_private_key ( prv_pem, password=passw, backend=default_backend() )
 
-    print ( prkey )
-
     private_key_pem = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
     save_to_file ( private_key_pem.decode("utf-8"), 'mhc.pem' )
 #    print ( private_key_pem )
@@ -111,7 +109,6 @@ def pem_to_ecpriv ( prvpem, passwd ):
     prv_pem = prv_key.encode("utf-8")
     passw = passwd.encode("utf-8")
     prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
-    print ( prkey )
 
     ec_priv = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
     save_to_file ( ec_priv.decode("utf-8"), "mhc.ec.priv" )
