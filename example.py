@@ -17,13 +17,13 @@ address = metahash.generate ()
 
 #address = metahash.pem_to_pub ( address+'.pem' )
 
-#metahash.pem_to_ecpriv ( address+'.pem', passwd )
+#address = metahash.pem_to_ecpriv ( address+'.pem', passwd )
 
-#metahash.ecpriv_to_pem ( address+'.ec.priv', passwd )
+#address = metahash.ecpriv_to_pem ( address+'.ec.priv', passwd )
 
-#metahash.pem_to_der ( address+'.pem' )
+#address = metahash.pem_to_der ( address+'.pem' )
 
-#address = metahash.pub_to_der ( address+'.pub' )
+#address = address = metahash.pub_to_der ( address+'.pub' )
 
 #metahash.der_to_pem ( address+'.prv.der' )
 
