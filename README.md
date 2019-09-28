@@ -1,4 +1,4 @@
-# pythom-metahash
+# python-metahash
 Library for MetaHash in Python
 
 Генерация ключей
