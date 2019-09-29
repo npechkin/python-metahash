@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 ################################################
 net = 'main'
-address = '0x00d3c53b97bc6d2926d33db13e406850c46bd1852ed546b7fa'
-passwd = '12345'
+#address = '0x00d3c53b97bc6d2926d33db13e406850c46bd1852ed546b7fa'
+#passwd = '12345'
 ################################################
 import os
 import sys
 import json
 import metahash
 ##############  KEY GENERATE  ##################
-#address = metahash.generate ()
+address = metahash.generate ()
 ##############  KEY CONVERT   ##################
 #f = open ( address+".pem" )
 #private_key_ascii = f.read()
@@ -30,9 +30,9 @@ import metahash
 #f = open ( address+".pem", 'w' )
 #f.write ( private_key_ascii )
 
-f = open ( address+".pem" )
-private_key_ascii = f.read()
-private_der_ascii = metahash.pem_to_der ( private_key_ascii )
+#f = open ( address+".pem" )
+#private_key_ascii = f.read()
+#private_der_ascii = metahash.pem_to_der ( private_key_ascii )
 #print ( private_der_ascii )
 
 #f = open ( address+".pub" )
@@ -40,7 +40,7 @@ private_der_ascii = metahash.pem_to_der ( private_key_ascii )
 #public_der_ascii = metahash.pub_to_der ( public_key_ascii )
 #print ( public_der_ascii )
 
-private_key_ascii = metahash.der_to_pem ( private_der_ascii )
+#####private_key_ascii = metahash.der_to_pem ( private_der_ascii )
 #################################################
 print ( address )
 ################   GET INFO   ###################
