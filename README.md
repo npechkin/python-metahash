@@ -30,22 +30,14 @@
 
 JSON запросы
 
-    metahash.fetch_balance ( net, address )
++    metahash.fetch_balance ( net, address )
 
-    metahash.fetch_history ( net, address )
++    metahash.fetch_history ( net, address )
 
-    metahash.get_tx ( net, txhash )
++    metahash.get_tx ( net, txhash )
 
-    metahash.create_tx ( net, to, value, privkey, nonce, fee, data )
++    metahash.get_block_by_hash ( net, bkhash, type, beginTx, countTxs )
 
-    metahash.send_tx ( net, to, value, privkey, nonce, fee, data )
++    metahash.get_block_by_number ( net, block_number, type, beginTx, countTxs )
 
-    metahash.fetch_balance ( net, address )
-
-    metahash.fetch_history ( net, address )
-
-    metahash.get_tx ( net, txhash )
-
-    metahash.create_tx ( net, to, value, privkey, nonce, fee, data )
-
-    metahash.send_tx ( net, to, value, privkey, nonce, fee, data )
+    metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )

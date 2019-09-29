@@ -10,6 +10,12 @@ import random
 import json
 import binascii
 
+PROXY = 'proxy.net-%s.metahashnetwork.com'
+PROXY_PORT = 9999
+TORRENT = 'tor.net-%s.metahashnetwork.com'
+TORRENT_PORT = 5795
+COUNT_RETRY = 5
+###################################################################################
 try:
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import hashes
@@ -19,8 +25,18 @@ try:
     from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, PublicFormat, NoEncryption, BestAvailableEncryption
     from cryptography.hazmat.primitives.serialization import load_pem_private_key, load_der_private_key, load_pem_public_key, load_der_public_key
 except ImportError:
-    print ( 'Something went wrong, check your cryptography module installation ( pip install cryptography )' )
-    exit ( 1 )
+	print ( 'Check your cryptography module installation ( pip install cryptography )' )
+	exit ( 1 )
+try:
+    import dns.resolver
+except ImportError:
+	print ( 'Check your dnspython module installation ( pip install dnspython )' )
+	exit ( 1 )
+try:
+    import requests
+except ImportError:
+	print ( 'Check your requests module installation ( pip install requests )' )
+	exit ( 1 )
 
 def save_to_file ( text, file_name ):
     with open( file_name, 'w') as f:
@@ -131,19 +147,67 @@ def der_to_pem ( prvder ):
     f = open ( prvder )
     prv_key = f.read()
     prv_der = prv_key.encode ("utf-8")
-    prkey = load_der_private_key ( prv_der, password=None, backend=default_backend() )
-    print ( prkey )
+#    prkey = load_der_private_key ( pr_der, password=None, backend=default_backend() )
 
-#    print ( prv_der )
-#    pr_der = binascii.b2a_hex(prv_der).decode()
+#    print ( prv_key )
+    print ( prv_der )
 #    print ( pr_der )
-
-
+#    print ( prkey )
 
 #    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
 #    print ( pr_der )
 #    pr_der = binascii.b2a_hex(private_key_der).decode()
 #    save_to_file ( pr_der, "mhc.prv.der" )
 #    print ( pr_der )
+
+def torrent_request ( net, request ):
+    addr = TORRENT % net
+    items = dns.resolver.Resolver().query(addr).rrset.items
+    ip_addr = items[0].address
+    url = "http://" + ip_addr + ":%d" % ( TORRENT_PORT )
+    data = json.dumps ( request )
+    r = requests.post ( url, data )
+    result = json.loads ( r.text )
+    return ( result )
+
+def proxy_request ( net, request ):
+    addr = PROXY % net
+    items = dns.resolver.Resolver().query(addr).rrset.items
+    ip_addr = items[0].address
+    url = "http://" + ip_addr + ":%d" % ( PROXY_PORT )
+    data = json.dumps ( request )
+    r = requests.post ( url, data )
+    result = json.loads ( r.text )
+    return ( result )
+
+def fetch_balance ( net, address ):
+    request = { "id": 1, "method": "fetch-balance", "params": { "address": address } }
+    balance = torrent_request ( net, request )
+    return ( balance )
+
+def fetch_history ( net, address, beginTx, countTxs ):
+    request = { "id": 1, "method": "fetch-history", "params": { "address": address, "beginTx": beginTx, "countTxs": countTxs } }
+    history = torrent_request ( net, request )
+    return ( history )
+
+def get_tx ( net, txhash ):
+    request = { "id": 1, "method": "get-tx", "params": { "hash": txhash } }
+    response = torrent_request ( net, request )
+    return ( response )
+
+def get_block_by_hash ( net, bkhash, typ, beginTx, countTxs ):
+    request = { "id": 1, "method": "get-block-by-hash", "params": { "hash": bkhash, "type": typ, "beginTx": beginTx, "countTxs": countTxs } }
+    response = torrent_request ( net, request )
+    return ( response )
+
+def get_block_by_number ( net, block_number, typ, beginTx, countTxs ):
+    request = { "id": 1, "method": "get-block-by-number", "params": { "number": block_number, "type": typ, "beginTx": beginTx, "countTxs": countTxs } }
+    response = torrent_request ( net, request )
+    return ( response )
+
+#def mhc_send ( net, to, value, privkey, nonce, fee, data ):
+#    request = { "id": 1, "method": "mhc_send", "params": {  } }
+#    response = torrent_request ( net, request )
+#    return ( response )
 
 ###########################    END    ############################
