@@ -3,30 +3,30 @@
 Генерация ключей
 
 +    metahash.generate ()
-    генерирует pem, pub ключи
+    генерирует pem, pub ключи, записывает их на диск
 
 Конвертация ключей
 
-+    metahash.get_address ( address+'.pub' )
-    получает MetaHash адрес из публичного ключа
++    metahash.get_address ( public_key_ascii )
+    возвращает MetaHash адрес из публичного ключа
 
-+    metahash.pem_to_pub ( address+'.pem' )
-    получает pub ключ из приватного pem
++    metahash.pem_to_pub ( private_key_ascii )
+    возвращает pub ключ из приватного pem
 
-+    metahash.pem_to_ecpriv ( address+'.pem', passwd )
-    получает приватный ключ для MetaGate с паролем
++    metahash.pem_to_ecpriv ( private_key_ascii, passwd )
+    возвращает приватный ключ для MetaGate с паролем
 
-+    metahash.ecpriv_to_pem ( address+'.ec.priv', passwd )
-    получает открытый приватный ключ pem
++    metahash.ecpriv_to_pem ( ecpriv_key_ascii, passwd )
+    возвращает открытый приватный ключ pem
 
-+    metahash.pem_to_der ( address+'.pem' )
-    получает приватный ключ в формате HEX der
++    metahash.pem_to_der ( private_key_ascii )
+    возвращает приватный ключ в формате HEX der
 
-*    metahash.pub_to_der ( address+'.pub' )
-    получает публичный ключ в формате HEX der
+*    metahash.pub_to_der ( public_key_ascii )
+    возвращает публичный ключ в формате HEX der
 
-    metahash.der_to_pem ( address+'.prv.der' )
-    получает pem из HEX der
+    metahash.der_to_pem ( private_der_ascii )
+    возвращает pem из HEX der
 
 JSON запросы
 

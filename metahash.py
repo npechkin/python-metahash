@@ -55,21 +55,20 @@ def hex_point_coordinate ( coordinate_value ):
 
 def generate ():
     private_key = ec.generate_private_key ( ec.SECP256K1(), default_backend() )
-    private_key_pem = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    save_to_file ( private_key_pem.decode("utf-8"), 'tmp.pem' )
-    address = pem_to_pub ('tmp.pem')
-    save_to_file ( private_key_pem.decode("utf-8"), "%s.pem" % address )
-    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pem') )
+    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    private_key_ascii = private_key_bin.decode("utf-8")
+    public_key_ascii = pem_to_pub ( private_key_ascii )
+    address = get_address ( public_key_ascii )
+    save_to_file ( private_key_ascii, '%s.pem' % address )
+    save_to_file ( public_key_ascii, '%s.pub' % address )
     return ( address )
 
-def get_address ( pubpem ):
-    f = open ( pubpem )
-    pkey = f.read()
-    pub_key_pem = pkey.encode("utf-8")
-    pub_key = load_pem_public_key ( pub_key_pem, backend=default_backend() )
+def get_address ( public_key_ascii ):
+    public_key_bin = public_key_ascii.encode("utf-8")
+    public_key = load_pem_public_key ( public_key_bin, backend=default_backend() )
 
-    x_hex = hex_point_coordinate ( pub_key.public_numbers().x )
-    y_hex = hex_point_coordinate ( pub_key.public_numbers().y )
+    x_hex = hex_point_coordinate ( public_key.public_numbers().x )
+    y_hex = hex_point_coordinate ( public_key.public_numbers().y )
     code = '04' + str (x_hex) + str (y_hex)
 
     resulrt_sha256 = hash_code ( code, 'sha256' )
@@ -80,84 +79,55 @@ def get_address ( pubpem ):
     address = '0x' + resulrt_rmd160 + first4_resulrt_sha256rmd_again
     return ( address )
 
-def pem_to_pub ( prvpem ):
-    f = open ( prvpem )
-    prv_key = f.read()
-    prv_pem = prv_key.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
-    pub_key = prkey.public_key ()
-    pub_key_pem = pub_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
-    save_to_file ( pub_key_pem.decode("utf-8"), "tmp.pub" )
-    address = get_address ('tmp.pub')
-    save_to_file ( pub_key_pem.decode("utf-8"), "%s.pub" % address )
-    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pub') )
-    return ( address )
+def pem_to_pub ( private_key_ascii ):
+    private_key_bin = private_key_ascii.encode("utf-8")
+    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
+    public_key = private_key.public_key ()
+    public_key_bin = public_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
+    public_key_ascii = public_key_bin.decode("utf-8")
+    return ( public_key_ascii )
 
-def pem_to_ecpriv ( prvpem, passwd ):
-    f = open ( prvpem )
-    prv_key = f.read()
-    prv_pem = prv_key.encode("utf-8")
+def pem_to_ecpriv ( private_key_ascii, passwd ):
     passw = passwd.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
+    private_key_bin = private_key_ascii.encode("utf-8")
+    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
+    ecpriv_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
+    ecpriv_key_ascii = ecpriv_key_bin.decode("utf-8")
+    return ( ecpriv_key_ascii )
 
-    ec_priv = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
-    address = pem_to_pub ( prvpem )
-    save_to_file ( ec_priv.decode("utf-8"), "%s.ec.priv" % address )
-    return ( address )
-
-def ecpriv_to_pem ( ecpriv, passwd ):
-    f = open ( ecpriv )
-    ecprv_key = f.read()
-    prv_pem = ecprv_key.encode("utf-8")
+def ecpriv_to_pem ( ecpriv_key_ascii, passwd ):
     passw = passwd.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=passw, backend=default_backend() )
+    ecpriv_key_bin = ecpriv_key_ascii.encode("utf-8")
+    private_key = load_pem_private_key ( ecpriv_key_bin, password=passw, backend=default_backend() )
+    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    private_key_ascii = private_key_bin.decode("utf-8")
+    return ( private_key_ascii )
 
-    private_key_pem = prkey.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    save_to_file ( private_key_pem.decode("utf-8"), 'tmp.pem' )
-    address = pem_to_pub ( 'tmp.pem' )
-    save_to_file ( private_key_pem.decode("utf-8"), '%s.pem' % address )
-    os.remove ( path = os.path.join ( os.path.abspath ( os.path.dirname (__file__) ), 'tmp.pem') )
-    return ( address )
+def pem_to_der ( private_key_ascii ):
+    private_key_bin = private_key_ascii.encode("utf-8")
+    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
+    private_key_der = private_key.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    private_der_ascii = binascii.b2a_hex(private_key_der).decode()
+    return ( private_der_ascii )
 
-def pem_to_der ( prvpem ):
-    f = open ( prvpem )
-    prv_key = f.read()
-    prv_pem = prv_key.encode("utf-8")
-    prkey = load_pem_private_key ( prv_pem, password=None, backend=default_backend() )
+def pub_to_der ( public_key_ascii ):
+    public_key_bin = public_key_ascii.encode("utf-8")
+    public_key = load_pem_public_key ( public_key_bin, backend=default_backend() )
+    public_der_bin = public_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
+    public_der_ascii = binascii.b2a_hex(public_der_bin).decode()
+    return ( public_der_ascii )
 
-    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    pr_der = binascii.b2a_hex(private_key_der).decode()
-    address = pem_to_pub ( prvpem )
-    save_to_file ( pr_der, "%s.prv.der" % address )
-    return ( address )
-
-def pub_to_der ( pubpem ):
-    f = open ( pubpem )
-    pkey = f.read()
-    pub_key_pem = pkey.encode("utf-8")
-    pub_key = load_pem_public_key ( pub_key_pem, backend=default_backend() )
-
-    pub_key_der = pub_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
-    pk_der = binascii.b2a_hex(pub_key_der).decode()
-    address = get_address ( pubpem )
-    save_to_file ( pk_der, "%s.pub.der" % address )
-    return ( address )
-
-def der_to_pem ( prvder ):
-    f = open ( prvder )
-    prv_key = f.read()
-    prv_der = prv_key.encode ("utf-8")
-#    prkey = load_der_private_key ( pr_der, password=None, backend=default_backend() )
-
-#    print ( prv_key )
-    print ( prv_der )
-#    print ( pr_der )
-#    print ( prkey )
+def der_to_pem ( private_der_ascii ):
+    private_der_bin = private_der_ascii.encode ("utf-8")
+    print ( private_der_bin )
+    private_key = load_der_private_key ( private_der_bin, password=None, backend=default_backend() )
+#    print ( private_key )
 
 #    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
 #    print ( pr_der )
+#    print ( prkey )
+#    print ( pr_der )
 #    pr_der = binascii.b2a_hex(private_key_der).decode()
-#    save_to_file ( pr_der, "mhc.prv.der" )
 #    print ( pr_der )
 
 def torrent_request ( net, request ):
@@ -205,9 +175,10 @@ def get_block_by_number ( net, block_number, typ, beginTx, countTxs ):
     response = torrent_request ( net, request )
     return ( response )
 
-#def mhc_send ( net, to, value, privkey, nonce, fee, data ):
-#    request = { "id": 1, "method": "mhc_send", "params": {  } }
-#    response = torrent_request ( net, request )
-#    return ( response )
+def mhc_send ( net, to, value, privkey, nonce, fee, data ):
+    pubkey = pub_to_der ( p )
+    request = { "id": 1, "method": "mhc_send", "params": { "to": to , "value": value, "fee": fee, "nonce": nonce, "data": data, "pubkey": pub_key,"sign": sign } }
+    response = proxy_request ( net, request )
+    return ( response )
 
 ###########################    END    ############################
