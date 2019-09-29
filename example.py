@@ -72,5 +72,9 @@ print ( address )
 #response = metahash.get_block_by_number ( net, block_number, typ, beginTx, countTxs )
 #print ( response )
 
+##################   SEND MHC   ###################
+
 #response = metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )
 #print ( response )
+
+####################   END   ######################
