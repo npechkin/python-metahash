@@ -40,4 +40,6 @@ JSON запросы
 
 +    metahash.get_block_by_number ( net, block_number, type, beginTx, countTxs )
 
+Отправка MHC
+
     metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )
