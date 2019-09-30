@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 ################################################
 net = 'main'
-#address = '0x00d3c53b97bc6d2926d33db13e406850c46bd1852ed546b7fa'
-#passwd = '12345'
+address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
+# passwd = '12345' # for *.ec.priv
 ################################################
 import os
 import sys
 import json
 import metahash
 ##############  KEY GENERATE  ##################
-address = metahash.generate ()
+#address = metahash.generate ()
 ##############  KEY CONVERT   ##################
 #f = open ( address+".pem" )
 #private_key_ascii = f.read()
@@ -40,9 +40,11 @@ address = metahash.generate ()
 #public_der_ascii = metahash.pub_to_der ( public_key_ascii )
 #print ( public_der_ascii )
 
-#####private_key_ascii = metahash.der_to_pem ( private_der_ascii )
+#private_der_ascii = '30740201010420---------------------'
+#private_key_ascii = metahash.der_to_pem ( private_der_ascii )
+#print ( private_key_ascii )
 #################################################
-print ( address )
+#print ( '\n' + address )
 ################   GET INFO   ###################
 
 #balance = metahash.fetch_balance ( net, address )
@@ -74,6 +76,7 @@ print ( address )
 
 ##################   SEND MHC   ###################
 
+#to = '0x0088825ae25e516a34cb94bada9b25a811213b55ae3160c888'
 #response = metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )
 #print ( response )
 

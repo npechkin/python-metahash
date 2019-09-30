@@ -104,14 +104,15 @@ def ecpriv_to_pem ( ecpriv_key_ascii, passwd ):
     return ( private_key_ascii )
 
 def pem_to_der ( private_key_ascii ):
-    private_key_bin = private_key_ascii.encode("utf-8")
+    private_key_bin = private_key_ascii.encode ("utf-8")
     private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
-    private_key_der = private_key.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    private_der_ascii = binascii.b2a_hex(private_key_der).decode()
+    private_der_bytes = private_key.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    private_der_bin = binascii.b2a_hex ( private_der_bytes )
+    private_der_ascii = private_der_bin.decode ( )
     return ( private_der_ascii )
 
 def pub_to_der ( public_key_ascii ):
-    public_key_bin = public_key_ascii.encode("utf-8")
+    public_key_bin = public_key_ascii.encode ("utf-8")
     public_key = load_pem_public_key ( public_key_bin, backend=default_backend() )
     public_der_bin = public_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
     public_der_ascii = binascii.b2a_hex(public_der_bin).decode()
@@ -119,16 +120,11 @@ def pub_to_der ( public_key_ascii ):
 
 def der_to_pem ( private_der_ascii ):
     private_der_bin = private_der_ascii.encode ("utf-8")
-    print ( private_der_bin )
-    private_key = load_der_private_key ( private_der_bin, password=None, backend=default_backend() )
-#    print ( private_key )
-
-#    private_key_der = prkey.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-#    print ( pr_der )
-#    print ( prkey )
-#    print ( pr_der )
-#    pr_der = binascii.b2a_hex(private_key_der).decode()
-#    print ( pr_der )
+    private_der_bytes = binascii.a2b_hex ( private_der_bin )
+    private_key = load_der_private_key ( private_der_bytes, password=None, backend=default_backend() )
+    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    private_key_ascii = private_key_bin.decode ( )
+    return ( private_key_ascii )
 
 def torrent_request ( net, request ):
     addr = TORRENT % net
