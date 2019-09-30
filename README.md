@@ -22,10 +22,10 @@
 +    metahash.pem_to_der ( private_key_ascii )
     возвращает приватный ключ в формате HEX der
 
-*    metahash.pub_to_der ( public_key_ascii )
++    metahash.pub_to_der ( public_key_ascii )
     возвращает публичный ключ в формате HEX der
 
-    metahash.der_to_pem ( private_der_ascii )
++    metahash.der_to_pem ( private_der_ascii )
     возвращает pem из HEX der
 
 JSON запросы
