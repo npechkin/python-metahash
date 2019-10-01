@@ -10,12 +10,6 @@ import random
 import json
 import binascii
 
-PROXY = 'proxy.net-%s.metahashnetwork.com'
-PROXY_PORT = 9999
-TORRENT = 'tor.net-%s.metahashnetwork.com'
-TORRENT_PORT = 5795
-COUNT_RETRY = 5
-###################################################################################
 try:
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import hashes
@@ -27,11 +21,7 @@ try:
 except ImportError:
 	print ( 'Check your cryptography module installation ( pip install cryptography )' )
 	exit ( 1 )
-try:
-    import dns.resolver
-except ImportError:
-	print ( 'Check your dnspython module installation ( pip install dnspython )' )
-	exit ( 1 )
+
 try:
     import requests
 except ImportError:
@@ -54,21 +44,72 @@ def hex_point_coordinate ( coordinate_value ):
     return value_hex if value_len <= 0 else '0' * value_len + value_hex
 
 def generate ():
-    private_key = ec.generate_private_key ( ec.SECP256K1(), default_backend() )
-    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    private_key_ascii = private_key_bin.decode("utf-8")
-    public_key_ascii = pem_to_pub ( private_key_ascii )
-    address = get_address ( public_key_ascii )
-    save_to_file ( private_key_ascii, '%s.pem' % address )
-    save_to_file ( public_key_ascii, '%s.pub' % address )
-    return ( address )
+    priv_key = ec.generate_private_key ( ec.SECP256K1(), default_backend() )
+    return ( priv_key )
 
-def get_address ( public_key_ascii ):
-    public_key_bin = public_key_ascii.encode("utf-8")
-    public_key = load_pem_public_key ( public_key_bin, backend=default_backend() )
+def get_prv_pem ( prv_pem_ascii ):
+    prv_pem_bin = prv_pem_ascii.encode("utf-8")
+    priv_key = load_pem_private_key ( prv_pem_bin, password=None, backend=default_backend() )
+    return ( priv_key )
 
-    x_hex = hex_point_coordinate ( public_key.public_numbers().x )
-    y_hex = hex_point_coordinate ( public_key.public_numbers().y )
+def get_prv_der ( prv_der_ascii ):
+    prv_der_bin = prv_der_ascii.encode("utf-8")
+    prv_der_bytes = binascii.a2b_hex ( prv_der_bin )
+    priv_key = load_der_private_key ( prv_der_bytes, password=None, backend=default_backend() )
+    return ( priv_key )
+
+def get_ec_prv_pem ( ec_prv_pem_ascii, passwd ):
+    passw = passwd.encode("utf-8")
+    ec_prv_pem_bin = ec_prv_pem_ascii.encode("utf-8")
+    priv_key = load_pem_private_key ( ec_prv_pem_bin, password=passw, backend=default_backend() )
+    return ( priv_key )
+
+def get_pub_pem ( pub_pem_ascii ):
+    pub_pem_bin = pub_pem_ascii.encode("utf-8")
+    pub_key = load_pem_public_key ( pub_pem_bin, backend=default_backend() )
+    return ( pub_key )
+
+def get_pub_der ( pub_der_ascii ):
+    pub_der_bin = pub_der_ascii.encode("utf-8")
+    pub_der_bytes = binascii.a2b_hex ( pub_der_bin )
+    pub_key = load_der_public_key ( pub_der_bytes, backend=default_backend() )
+    return ( pub_key )
+
+def dmp_prv_der ( priv_key ):
+    prv_der_bytes = priv_key.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    prv_der_bin = binascii.b2a_hex ( prv_der_bytes )
+    prv_der_ascii = prv_der_bin.decode ( )
+    return ( prv_der_ascii )
+
+def dmp_prv_pem ( priv_key ):
+    prv_pem_bin = priv_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
+    prv_pem_ascii = prv_pem_bin.decode("utf-8")
+    return ( prv_pem_ascii )
+
+def dmp_ec_prv_pem ( priv_key, passwd ):
+    passw = passwd.encode("utf-8")
+    ec_prv_pem_bin = priv_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
+    ec_prv_pem_ascii = ec_prv_pem_bin.decode("utf-8")
+    return ( ec_prv_pem_ascii )
+
+def dmp_pub_pem ( pub_key ):
+    pub_pem_bin = pub_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
+    pub_pem_ascii = pub_pem_bin.decode("utf-8")
+    return ( pub_pem_ascii )
+
+def dmp_pub_der ( pub_key ):
+    pub_der_bytes = pub_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
+    pub_der_bin = binascii.b2a_hex ( pub_der_bytes )
+    pub_der_ascii = pub_der_bin.decode ( )
+    return ( pub_der_ascii )
+
+def get_public_key ( priv_key ):
+    pub_key = priv_key.public_key ()
+    return ( pub_key )
+
+def get_address ( pub_key ):
+    x_hex = hex_point_coordinate ( pub_key.public_numbers().x )
+    y_hex = hex_point_coordinate ( pub_key.public_numbers().y )
     code = '04' + str (x_hex) + str (y_hex)
 
     resulrt_sha256 = hash_code ( code, 'sha256' )
@@ -79,102 +120,86 @@ def get_address ( public_key_ascii ):
     address = '0x' + resulrt_rmd160 + first4_resulrt_sha256rmd_again
     return ( address )
 
-def pem_to_pub ( private_key_ascii ):
-    private_key_bin = private_key_ascii.encode("utf-8")
-    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
-    public_key = private_key.public_key ()
-    public_key_bin = public_key.public_bytes ( encoding = Encoding.PEM, format = PublicFormat.SubjectPublicKeyInfo )
-    public_key_ascii = public_key_bin.decode("utf-8")
-    return ( public_key_ascii )
-
-def pem_to_ecpriv ( private_key_ascii, passwd ):
-    passw = passwd.encode("utf-8")
-    private_key_bin = private_key_ascii.encode("utf-8")
-    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
-    ecpriv_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = BestAvailableEncryption ( passw ) )
-    ecpriv_key_ascii = ecpriv_key_bin.decode("utf-8")
-    return ( ecpriv_key_ascii )
-
-def ecpriv_to_pem ( ecpriv_key_ascii, passwd ):
-    passw = passwd.encode("utf-8")
-    ecpriv_key_bin = ecpriv_key_ascii.encode("utf-8")
-    private_key = load_pem_private_key ( ecpriv_key_bin, password=passw, backend=default_backend() )
-    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    private_key_ascii = private_key_bin.decode("utf-8")
-    return ( private_key_ascii )
-
-def pem_to_der ( private_key_ascii ):
-    private_key_bin = private_key_ascii.encode ("utf-8")
-    private_key = load_pem_private_key ( private_key_bin, password=None, backend=default_backend() )
-    private_der_bytes = private_key.private_bytes ( encoding = Encoding.DER, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    private_der_bin = binascii.b2a_hex ( private_der_bytes )
-    private_der_ascii = private_der_bin.decode ( )
-    return ( private_der_ascii )
-
-def pub_to_der ( public_key_ascii ):
-    public_key_bin = public_key_ascii.encode ("utf-8")
-    public_key = load_pem_public_key ( public_key_bin, backend=default_backend() )
-    public_der_bin = public_key.public_bytes ( encoding = Encoding.DER, format = PublicFormat.SubjectPublicKeyInfo )
-    public_der_ascii = binascii.b2a_hex(public_der_bin).decode()
-    return ( public_der_ascii )
-
-def der_to_pem ( private_der_ascii ):
-    private_der_bin = private_der_ascii.encode ("utf-8")
-    private_der_bytes = binascii.a2b_hex ( private_der_bin )
-    private_key = load_der_private_key ( private_der_bytes, password=None, backend=default_backend() )
-    private_key_bin = private_key.private_bytes ( encoding = Encoding.PEM, format = PrivateFormat.TraditionalOpenSSL, encryption_algorithm = NoEncryption() )
-    private_key_ascii = private_key_bin.decode ( )
-    return ( private_key_ascii )
-
 def torrent_request ( net, request ):
-    addr = TORRENT % net
-    items = dns.resolver.Resolver().query(addr).rrset.items
-    ip_addr = items[0].address
-    url = "http://" + ip_addr + ":%d" % ( TORRENT_PORT )
+    url = 'http://tor.net-'+net+'.metahashnetwork.com:5795'
+    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'}
     data = json.dumps ( request )
-    r = requests.post ( url, data )
-    result = json.loads ( r.text )
+    res = requests.post ( url, data, headers = headers )
+    result = json.loads ( res.text )
     return ( result )
 
 def proxy_request ( net, request ):
-    addr = PROXY % net
-    items = dns.resolver.Resolver().query(addr).rrset.items
-    ip_addr = items[0].address
-    url = "http://" + ip_addr + ":%d" % ( PROXY_PORT )
+    url = 'http://proxy.net-'+net+'.metahashnetwork.com:9999'
+    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'}
     data = json.dumps ( request )
-    r = requests.post ( url, data )
-    result = json.loads ( r.text )
+    res = requests.post ( url, data, headers = headers )
+    result = json.loads ( res.text )
     return ( result )
 
+def get_sign ( to, value, fee, nonce, dataHex, private_key_der ):
+    result_str = ''
+    value = int(value)
+    nonce = int(nonce)
+    fee = int(fee)
+    len_data = int(len(data) / 2)
+    if to.startswith('0x'):
+        result_str += to[2:]
+    else:
+        result_str += to
+        result_str += int_to_hex(value)
+        result_str += int_to_hex(fee)
+        result_str += int_to_hex(nonce)
+        result_str += int_to_hex(len_data)
+        result_str += data
+
+    message = get_sign ( to, value, fee, nonce, dataHex )
+#    print ( message )
+    signature = private_key.sign ( message, ec.ECDSA ( hashes.SHA256() ) )
+#    print ( signature )
+    sign = binascii.b2a_hex ( signature ).decode()
+#    print ( sign )
+
+    return binascii.unhexlify ( sign )
+
 def fetch_balance ( net, address ):
-    request = { "id": 1, "method": "fetch-balance", "params": { "address": address } }
+    request = {'id':1,'method':'fetch-balance','params':{'address':address}}
     balance = torrent_request ( net, request )
     return ( balance )
 
 def fetch_history ( net, address, beginTx, countTxs ):
-    request = { "id": 1, "method": "fetch-history", "params": { "address": address, "beginTx": beginTx, "countTxs": countTxs } }
+    request = {'id':1,'method':'fetch-history','params':{'address':address,'beginTx':beginTx,'countTxs':countTxs}}
     history = torrent_request ( net, request )
     return ( history )
 
 def get_tx ( net, txhash ):
-    request = { "id": 1, "method": "get-tx", "params": { "hash": txhash } }
+    request = {'id':1,'method':'get-tx','params':{'hash':txhash}}
     response = torrent_request ( net, request )
     return ( response )
 
 def get_block_by_hash ( net, bkhash, typ, beginTx, countTxs ):
-    request = { "id": 1, "method": "get-block-by-hash", "params": { "hash": bkhash, "type": typ, "beginTx": beginTx, "countTxs": countTxs } }
+    request = {'id':1,'method':'get-block-by-hash','params':{'hash':bkhash,'type':typ,'beginTx':beginTx,'countTxs':countTxs}}
     response = torrent_request ( net, request )
     return ( response )
 
 def get_block_by_number ( net, block_number, typ, beginTx, countTxs ):
-    request = { "id": 1, "method": "get-block-by-number", "params": { "number": block_number, "type": typ, "beginTx": beginTx, "countTxs": countTxs } }
+    request = {'id':1,'method':'get-block-by-number','params':{'number':block_number,'type':typ,'beginTx':beginTx,'countTxs':countTxs}}
     response = torrent_request ( net, request )
     return ( response )
 
-def mhc_send ( net, to, value, privkey, nonce, fee, data ):
-    pubkey = pub_to_der ( p )
-    request = { "id": 1, "method": "mhc_send", "params": { "to": to , "value": value, "fee": fee, "nonce": nonce, "data": data, "pubkey": pub_key,"sign": sign } }
-    response = proxy_request ( net, request )
-    return ( response )
+def mhc_send ( net, to, value, private_key_, nonce, fee, data ):
+    public_key_ascii = pem_to_pub ( private_key_ascii )
+    public_der_ascii = pub_to_der ( public_key_ascii )
+    private_key = get_private_key ( private_key_ascii )
+    print ( private_key )
+
+    byte_data = str.encode ( data )
+    hex_data = binascii.hexlify ( byte_data )
+    dataHex = hex_data.decode ()
+    fee = len(dataHex)
+    sign = get_sign ( to, value, fee, nonce, dataHex, private_key_der )
+
+#    req = {'jsonrpc':'2.0','method':'mhc_send','params':{'to':to,'value':value,'fee':fee,'nonce':nonce,'data':dataHex,'pubkey':public_der_ascii,'sign':sign}}
+#    res = proxy_request ( net, req )
+#    return ( res )
 
 ###########################    END    ############################

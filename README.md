@@ -1,32 +1,36 @@
-Библиотека функций MetaHash
+Metahash library in Python
 
-Генерация ключей
+Generate PEM and PUB keys
 
-+    metahash.generate ()
-    генерирует pem, pub ключи, записывает их на диск
++    priv_key = metahash.generate () generate private key
 
-Конвертация ключей
+Get public ley
 
-+    metahash.get_address ( public_key_ascii )
-    возвращает MetaHash адрес из публичного ключа
++    pub_key = metahash.get_public_key ( priv_key ) returns public key
 
-+    metahash.pem_to_pub ( private_key_ascii )
-    возвращает pub ключ из приватного pem
+Get metahash address
 
-+    metahash.pem_to_ecpriv ( private_key_ascii, passwd )
-    возвращает приватный ключ для MetaGate с паролем
++    metahash.get_address ( pub_key ) returns MetaHash address
 
-+    metahash.ecpriv_to_pem ( ecpriv_key_ascii, passwd )
-    возвращает открытый приватный ключ pem
+Dump keys to various formats
 
-+    metahash.pem_to_der ( private_key_ascii )
-    возвращает приватный ключ в формате HEX der
++    prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
 
-+    metahash.pub_to_der ( public_key_ascii )
-    возвращает публичный ключ в формате HEX der
++    ec_prv_pem_ascii = metahash.dmp_ec_prv_pem ( priv_key )
 
-+    metahash.der_to_pem ( private_der_ascii )
-    возвращает pem из HEX der
++    prv_der_ascii = metahash.dmp_prv_der ( priv_key )
+
+    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
+
+Load keys from ascii ( file )
+
++    priv_key = metahash.get_prv_pem ( prv_pem_ascii ) private key PEM
+
++    priv_key = metahash.get_ec_prv_pem ( prv_pem_ascii, passwd ) from MetaGate with password
+
++    priv_key = metahash.get_prv_der ( prv_der_ascii ) from node hex format DER
+
+    priv_key = metahash.get_ec_prv_der ( ec_prv_der_ascii, passwd ) hex format with password
 
 JSON запросы
 
