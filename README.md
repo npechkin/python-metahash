@@ -4,7 +4,7 @@ Generate private key
 
 +    priv_key = metahash.generate () # generate private key
 
-Get public ley
+Get public key
 
 +    pub_key = metahash.get_public_key ( priv_key ) # returns public key
 
