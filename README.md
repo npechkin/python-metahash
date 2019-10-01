@@ -1,6 +1,6 @@
 Metahash library in Python
 
-Generate PEM and PUB keys
+Generate private key
 
 +    priv_key = metahash.generate () # generate private key
 
