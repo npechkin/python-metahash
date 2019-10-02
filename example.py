@@ -3,12 +3,11 @@
 import os
 import sys
 import json
-#import pycurl
 import metahash
 ################################################
 net = 'main'
 address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
-#passwd = '12345' # for *.ec.priv
+passwd = '12345' # for *.ec.priv
 ##############  KEY GENERATE  ##################
 #priv_key = metahash.generate ()
 ############# GET PUBLIC KEY ####################
@@ -16,6 +15,37 @@ address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 ##############  GET ADDRESS   ###################
 #address = metahash.get_address ( pub_key )
 #print ( address )
+#################  KEY LOAD   ##################
+## PEM private keys
+#priv_key = metahash.get_prv_pem ( prv_pem_ascii )
+#print ( priv_key )
+
+## EC PEM private key
+#f = open ( address+".ec.priv" )
+#ec_prv_pem_ascii = f.read()
+#priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
+#print ( priv_key )
+
+#prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
+#metahash.save_to_file ( prv_pem_ascii, '%s.pem' % address )
+#print ( prv_pem_ascii )
+
+## DER private key
+#prv_der_ascii = '307402010104206ce96125549121883cdb8823a8f9d020249c58d638f92546744f652156ad6840a00706052b8104000aa14403420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
+#priv_key = metahash.get_prv_der ( prv_der_ascii )
+#print ( priv_key )
+
+## PEM public key
+#f = open ( address+".pub" )
+#pub_pem_ascii = f.read()
+#pub_key = metahash.get_pub_pem ( pub_pem_ascii )
+#print ( pub_key )
+
+## DER public key
+#pub_der_ascii = '3056301006072a8648ce3d020106052b8104000a03420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
+#pub_key = metahash.get_pub_der ( pub_der_ascii )
+#print ( pub_key )
+
 #################  KEY DUMP   ##################
 ## PEM private key
 #prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
@@ -41,33 +71,6 @@ address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 #pub_der_ascii = metahash.dmp_pub_der ( pub_key )
 #metahash.save_to_file ( pub_der_ascii, '%s.pub.der' % address )
 #print ( pub_der_ascii )
-
-#################  KEY LOAD   ##################
-## PEM private keys
-#priv_key = metahash.get_prv_pem ( prv_pem_ascii )
-#print ( priv_key )
-
-## EC PEM private key
-#f = open ( address+".ec.priv" )
-#ec_prv_pem_ascii = f.read()
-#priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
-#print ( priv_key )
-
-## DER private key
-#prv_der_ascii = '307402010104206ce96125549121883cdb8823a8f9d020249c58d638f92546744f652156ad6840a00706052b8104000aa14403420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
-#priv_key = metahash.get_prv_der ( prv_der_ascii )
-#print ( priv_key )
-
-## PEM public key
-#f = open ( address+".pub" )
-#pub_pem_ascii = f.read()
-#pub_key = metahash.get_pub_pem ( pub_pem_ascii )
-#print ( pub_key )
-
-## DER public key
-#pub_der_ascii = '3056301006072a8648ce3d020106052b8104000a03420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
-#pub_key = metahash.get_pub_der ( pub_der_ascii )
-#print ( pub_key )
 
 ################   GET INFO   ###################
 #balance = metahash.fetch_balance ( net, address )

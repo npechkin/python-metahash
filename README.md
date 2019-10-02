@@ -12,20 +12,6 @@ Get metahash address
 
 +    metahash.get_address ( pub_key ) # returns MetaHash address
 
-Dump keys to various formats
-
-+    prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
-
-+    ec_prv_pem_ascii = metahash.dmp_ec_prv_pem ( priv_key ) # for Metagate
-
-+    prv_der_ascii = metahash.dmp_prv_der ( priv_key ) # for Nodes
-
-    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
-
-+    pub_pem_ascii = metahash.dmp_pub_pem ( pub_key )
-
-+    pub_der_ascii = metahash.dmp_pub_der ( pub_key )
-
 Load keys from ascii ( file )
 
 +    priv_key = metahash.get_prv_pem ( prv_pem_ascii ) # private key PEM
@@ -39,6 +25,20 @@ Load keys from ascii ( file )
 +    pub_key = metahash.get_pub_pem ( pub_pem_ascii )
 
 +    pub_key = metahash.get_pub_der ( pub_der_ascii )
+
+Dump keys to various formats
+
++    prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
+
++    ec_prv_pem_ascii = metahash.dmp_ec_prv_pem ( priv_key ) # for Metagate
+
++    prv_der_ascii = metahash.dmp_prv_der ( priv_key ) # for Nodes
+
+    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
+
++    pub_pem_ascii = metahash.dmp_pub_pem ( pub_key )
+
++    pub_der_ascii = metahash.dmp_pub_der ( pub_key )
 
 JSON query
 
