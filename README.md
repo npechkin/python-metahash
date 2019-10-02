@@ -20,7 +20,7 @@ Dump keys to various formats
 
 +    prv_der_ascii = metahash.dmp_prv_der ( priv_key ) # for Nodes
 
--    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
+    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
 
 Load keys from ascii ( file )
 
@@ -30,7 +30,7 @@ Load keys from ascii ( file )
 
 +    priv_key = metahash.get_prv_der ( prv_der_ascii ) # from node hex format DER
 
--    priv_key = metahash.get_ec_prv_der ( ec_prv_der_ascii, passwd ) # hex format with password
+    priv_key = metahash.get_ec_prv_der ( ec_prv_der_ascii, passwd ) # hex format with password
 
 JSON query
 
@@ -46,6 +46,6 @@ JSON query
 
 Sending MHC
 
--    metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )
+    metahash.mhc_send ( net, to, value, privkey, nonce, fee, data )
 
 
