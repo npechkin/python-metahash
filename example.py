@@ -8,14 +8,14 @@ import metahash
 ################################################
 net = 'main'
 address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
-passwd = '12345' # for *.ec.priv
+#passwd = '12345' # for *.ec.priv
 ##############  KEY GENERATE  ##################
-priv_key = metahash.generate ()
+#priv_key = metahash.generate ()
 ############# GET PUBLIC KEY ####################
-pub_key = metahash.get_public_key ( priv_key )
+#pub_key = metahash.get_public_key ( priv_key )
 ##############  GET ADDRESS   ###################
-address = metahash.get_address ( pub_key )
-print ( address )
+#address = metahash.get_address ( pub_key )
+#print ( address )
 #################  KEY DUMP   ##################
 ## PEM private key
 #prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
@@ -99,16 +99,16 @@ print ( address )
 
 ##################   SEND MHC   ###################
 
-#to = '0x0088825ae25e516a34cb94bada9b25a811213b55ae3160c888'
-#value = "0"
-#f = open ( address+".pem" )
-#private_key_ascii = f.read()
-#nonce = metahash.fetch_balance( net, address )['result']['count_spent'] + 1
-#print ( nonce )
-#fee = "0"
-#data = '123'
-#res = metahash.mhc_send ( net, to, value, private_key_ascii, nonce, fee, data )
-#result = json.dumps ( res )
-#print ( result )
+to = '0x0088825ae25e516a34cb94bada9b25a811213b55ae3160c888'
+value = '0'
+f = open ( address+".pem" )
+prv_pem_ascii = f.read()
+priv_key = metahash.get_prv_pem ( prv_pem_ascii )
+nonce = metahash.fetch_balance( net, address )['result']['count_spent'] + 1
+fee = '0'
+data = ''
+res = metahash.mhc_send ( net, to, value, priv_key, nonce, fee, data )
+result = json.dumps ( res )
+print ( result )
 
 ####################   END   ######################

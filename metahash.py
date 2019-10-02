@@ -111,7 +111,6 @@ def get_address ( pub_key ):
     x_hex = hex_point_coordinate ( pub_key.public_numbers().x )
     y_hex = hex_point_coordinate ( pub_key.public_numbers().y )
     code = '04' + str (x_hex) + str (y_hex)
-
     resulrt_sha256 = hash_code ( code, 'sha256' )
     resulrt_rmd160 = '00' + hash_code ( resulrt_sha256.encode ( 'utf-8' ), 'rmd160' )
     resulrt_sha256rmd = hash_code(resulrt_rmd160.encode('utf-8'), 'sha256')
@@ -135,31 +134,6 @@ def proxy_request ( net, request ):
     res = requests.post ( url, data, headers = headers )
     result = json.loads ( res.text )
     return ( result )
-
-def get_sign ( to, value, fee, nonce, dataHex, private_key_der ):
-    result_str = ''
-    value = int(value)
-    nonce = int(nonce)
-    fee = int(fee)
-    len_data = int(len(data) / 2)
-    if to.startswith('0x'):
-        result_str += to[2:]
-    else:
-        result_str += to
-        result_str += int_to_hex(value)
-        result_str += int_to_hex(fee)
-        result_str += int_to_hex(nonce)
-        result_str += int_to_hex(len_data)
-        result_str += data
-
-    message = get_sign ( to, value, fee, nonce, dataHex )
-#    print ( message )
-    signature = private_key.sign ( message, ec.ECDSA ( hashes.SHA256() ) )
-#    print ( signature )
-    sign = binascii.b2a_hex ( signature ).decode()
-#    print ( sign )
-
-    return binascii.unhexlify ( sign )
 
 def fetch_balance ( net, address ):
     request = {'id':1,'method':'fetch-balance','params':{'address':address}}
@@ -186,20 +160,73 @@ def get_block_by_number ( net, block_number, typ, beginTx, countTxs ):
     response = torrent_request ( net, request )
     return ( response )
 
-def mhc_send ( net, to, value, private_key_, nonce, fee, data ):
-    public_key_ascii = pem_to_pub ( private_key_ascii )
-    public_der_ascii = pub_to_der ( public_key_ascii )
-    private_key = get_private_key ( private_key_ascii )
-    print ( private_key )
+def little_ending ( bytes ):
+    res_str = ''
+    while len ( bytes ):
+        res_str += bytes [-2:]
+        bytes = bytes [:-2]
+    return res_str
+
+def int_to_hex(value):
+    low_border = 250
+    read_int16 = 'fa'
+    read_int32 = 'fb'
+    read_int64 = 'fc'
+    read_int128 = 'fd'
+    read_int256 = 'fe'
+    read_int512 = 'ff'
+    bit = value.bit_length()
+    if value < low_border:
+        return '%02x' % value
+    elif value >= low_border and bit <= 16:
+        return read_int16 + little_ending('%.4x' % value)
+    elif bit > 16 and bit <= 32:
+        return read_int32 + little_ending('%.8x' % value)
+    elif bit > 32 and bit <= 64:
+        return read_int64 + little_ending('%.16x' % value)
+    elif bit > 64 and bit <= 128:
+        return read_int128 + little_ending('%.32x' % value)
+    elif bit > 128 and bit <= 256:
+        return read_int256 + little_ending('%.64x' % value)
+    elif bit > 256 and bit <=512:
+        return read_int512 + little_ending('%.128x' % value)
+
+def get_sign ( to, value, fee, nonce, dataHex, priv_key ):
+    len_data = int(len(dataHex)/2)
+    sign_text = ''
+    sign_text += to[2:]
+    sign_text += int_to_hex(int(value))
+    sign_text += int_to_hex(fee)
+    sign_text += int_to_hex(nonce)
+    sign_text += int_to_hex(len_data)
+    sign_text += dataHex
+#    print (to, value, fee, nonce, len_data, dataHex)
+    print (sign_text)
+    byte_data = str.encode(sign_text)
+    hex_data = binascii.hexlify(byte_data)
+    print (hex_data)
+    signature = priv_key.sign ( hex_data, ec.ECDSA ( hashes.SHA256() ) )
+#    print (signature)
+    sign = binascii.b2a_hex (signature).decode()
+    return (sign)
+
+def mhc_send ( net, to, value, priv_key, nonce, fee, data ):
+    pub_key = get_public_key ( priv_key )
+    prv_der_ascii = dmp_prv_der ( priv_key )
+    pub_der_ascii = dmp_pub_der ( pub_key )
+#    print (prv_der_ascii)
 
     byte_data = str.encode ( data )
     hex_data = binascii.hexlify ( byte_data )
     dataHex = hex_data.decode ()
     fee = len(dataHex)
-    sign = get_sign ( to, value, fee, nonce, dataHex, private_key_der )
+    sign = get_sign ( to, value, fee, nonce, dataHex, priv_key )
+#    sign = '3044022079f62b9c3166c38c2a8baa4dd4e31681cf8aace1a092dfabc469398aa9c8367502207c24a84d6d417d99d23f549f391f2ca2ece997869b10852e2d18c18886f6eea6'
+    print ( sign )
 
-#    req = {'jsonrpc':'2.0','method':'mhc_send','params':{'to':to,'value':value,'fee':fee,'nonce':nonce,'data':dataHex,'pubkey':public_der_ascii,'sign':sign}}
-#    res = proxy_request ( net, req )
-#    return ( res )
+    req = {'id':1,'method':'mhc_send','params':{'to':to,'value':value,'fee':str(fee),'nonce':str(nonce),'data':dataHex,'pubkey':pub_der_ascii,'sign':sign}}
+    print (json.dumps(req))
+    res = proxy_request ( net, req )
+    return ( res )
 
 ###########################    END    ############################
