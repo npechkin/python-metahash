@@ -22,14 +22,14 @@ address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 #ec_prv_pem_ascii = f.read()
 #priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
 
-## DER private key
-prv_der_ascii = '307402010104206ce96125549121883cdb8823a8f9d020249c58d638f92546744f652156ad6840a00706052b8104000aa14403420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
-priv_key = metahash.get_prv_der ( prv_der_ascii )
-
 ## PEM public key
 #f = open ( address+".pub" )
 #pub_pem_ascii = f.read()
 #pub_key = metahash.get_pub_pem ( pub_pem_ascii )
+
+## DER private key
+prv_der_ascii = '307402010104206ce96125549121883cdb8823a8f9d020249c58d638f92546744f652156ad6840a00706052b8104000aa14403420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
+priv_key = metahash.get_prv_der ( prv_der_ascii )
 
 ## DER public key
 #pub_der_ascii = '3056301006072a8648ce3d020106052b8104000a03420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
