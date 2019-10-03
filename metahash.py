@@ -217,7 +217,6 @@ def mhc_send ( net, to, value, fee, nonce, data, priv_key ):
     sign = get_sign ( to, value, fee, nonce, dataHex, priv_key )
 
     req = {'id':1,'method':'mhc_send','params':{'to':to,'value':value,'fee':str(fee),'nonce':str(nonce),'data':dataHex,'pubkey':pub_der_ascii,'sign':sign}}
-    print (json.dumps(req))
     res = proxy_request ( net, req )
     return ( res )
 
