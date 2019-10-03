@@ -20,8 +20,6 @@ Load keys from ascii ( file )
 
 +    priv_key = metahash.get_prv_der ( prv_der_ascii ) # from node hex format DER
 
-    priv_key = metahash.get_ec_prv_der ( ec_prv_der_ascii, passwd ) # hex format with password
-
 +    pub_key = metahash.get_pub_pem ( pub_pem_ascii )
 
 +    pub_key = metahash.get_pub_der ( pub_der_ascii )
@@ -33,8 +31,6 @@ Dump keys to various formats
 +    ec_prv_pem_ascii = metahash.dmp_ec_prv_pem ( priv_key ) # for Metagate
 
 +    prv_der_ascii = metahash.dmp_prv_der ( priv_key ) # for Nodes
-
-    ec_prv_der_ascii = metahash.dmp_ec_prv_der ( priv_key )
 
 +    pub_pem_ascii = metahash.dmp_pub_pem ( pub_key )
 
