@@ -44,7 +44,7 @@ JSON query
 
 +    metahash.fetch_balance ( net, address )
 
-+    metahash.fetch_history ( net, address )
++    metahash.fetch_history ( net, address, beginTx, countTxs )
 
 +    metahash.get_tx ( net, txhash )
 
