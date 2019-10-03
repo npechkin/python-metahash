@@ -200,16 +200,10 @@ def get_sign ( to, value, fee, nonce, dataHex, priv_key ):
     sign_text += int_to_hex(nonce)
     sign_text += int_to_hex(len_data)
     sign_text += dataHex
-#    print (to, value, fee, nonce, len_data, dataHex)
-    print (sign_text + "   sign_text")
-    byte_data = str.encode(sign_text)
-#    print (byte_data)
-    hex_data = binascii.hexlify(byte_data)
-#    print (hex_data)
-    signature = priv_key.sign ( hex_data, ec.ECDSA ( hashes.SHA256() ) )
+
+    bytes_text = binascii.unhexlify(sign_text)
+    signature = priv_key.sign ( bytes_text, ec.ECDSA ( hashes.SHA256() ) )
     sign = binascii.b2a_hex (signature).decode()
-#    sign = '3044022079f62b9c3166c38c2a8baa4dd4e31681cf8aace1a092dfabc469398aa9c8367502207c24a84d6d417d99d23f549f391f2ca2ece997869b10852e2d18c18886f6eea6'
-    print ( sign + "   sign" )
     return (sign)
 
 def mhc_send ( net, to, value, fee, nonce, data, priv_key ):
