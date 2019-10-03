@@ -54,6 +54,6 @@ JSON query
 
 Sending MHC
 
-    metahash.mhc_send ( net, to, value, fee, nonce, data, privkey )
++    metahash.mhc_send ( net, to, value, fee, nonce, data, privkey )
 
 
