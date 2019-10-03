@@ -10,12 +10,8 @@ address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 #passwd = '12345' # for *.ec.priv
 ##############  KEY GENERATE  ##################
 #priv_key = metahash.generate ()
-############# GET PUBLIC KEY ####################
-#pub_key = metahash.get_public_key ( priv_key )
-##############  GET ADDRESS   ###################
-#address = metahash.get_address ( pub_key )
-#print ( address )
 #################  KEY LOAD   ##################
+
 ## PEM private keys
 #f = open ( address+".pem" )
 #prv_pem_ascii = f.read()
@@ -39,7 +35,13 @@ priv_key = metahash.get_prv_der ( prv_der_ascii )
 #pub_der_ascii = '3056301006072a8648ce3d020106052b8104000a03420004f5e084f2ec9e16963b6fc22d687408f233cdbef42cf9d33a7cd8bdff6729d8f9b914c33bf337afcf144dd18bd3212fca05fb802b58253d474a146f1f33761ae1'
 #pub_key = metahash.get_pub_der ( pub_der_ascii )
 
+############# GET PUBLIC KEY ####################
+#pub_key = metahash.get_public_key ( priv_key )
+##############  GET ADDRESS   ###################
+#address = metahash.get_address ( pub_key )
+#print ( address )
 #################  KEY DUMP   ##################
+
 ## PEM private key
 #prv_pem_ascii = metahash.dmp_prv_pem ( priv_key )
 #metahash.save_to_file ( prv_pem_ascii, '%s.pem' % address )
