@@ -17,9 +17,9 @@ address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 #print ( address )
 #################  KEY LOAD   ##################
 ## PEM private keys
-f = open ( address+".pem" )
-prv_pem_ascii = f.read()
-priv_key = metahash.get_prv_pem ( prv_pem_ascii )
+#f = open ( address+".pem" )
+#prv_pem_ascii = f.read()
+#priv_key = metahash.get_prv_pem ( prv_pem_ascii )
 
 ## EC PEM private key
 #f = open ( address+".ec.priv" )
