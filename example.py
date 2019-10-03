@@ -99,10 +99,10 @@ priv_key = metahash.get_prv_der ( prv_der_ascii )
 
 to = '0x0088825ae25e516a34cb94bada9b25a811213b55ae3160c888'
 value = '0'
-nonce = metahash.fetch_balance( net, address )['result']['count_spent'] + 1
 fee = '0'
+nonce = metahash.fetch_balance( net, address )['result']['count_spent'] + 1
 data = ''
-res = metahash.mhc_send ( net, to, value, priv_key, nonce, fee, data )
+res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
 result = json.dumps ( res )
 print ( result )
 

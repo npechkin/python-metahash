@@ -212,7 +212,7 @@ def get_sign ( to, value, fee, nonce, dataHex, priv_key ):
     print ( sign + "   sign" )
     return (sign)
 
-def mhc_send ( net, to, value, priv_key, nonce, fee, data ):
+def mhc_send ( net, to, value, fee, nonce, data, priv_key ):
     pub_key = get_public_key ( priv_key )
     pub_der_ascii = dmp_pub_der ( pub_key )
 
