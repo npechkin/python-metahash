@@ -201,28 +201,26 @@ def get_sign ( to, value, fee, nonce, dataHex, priv_key ):
     sign_text += int_to_hex(len_data)
     sign_text += dataHex
 #    print (to, value, fee, nonce, len_data, dataHex)
-    print (sign_text)
+    print (sign_text + "   sign_text")
     byte_data = str.encode(sign_text)
+#    print (byte_data)
     hex_data = binascii.hexlify(byte_data)
-    print (hex_data)
+#    print (hex_data)
     signature = priv_key.sign ( hex_data, ec.ECDSA ( hashes.SHA256() ) )
-#    print (signature)
     sign = binascii.b2a_hex (signature).decode()
+#    sign = '3044022079f62b9c3166c38c2a8baa4dd4e31681cf8aace1a092dfabc469398aa9c8367502207c24a84d6d417d99d23f549f391f2ca2ece997869b10852e2d18c18886f6eea6'
+    print ( sign + "   sign" )
     return (sign)
 
 def mhc_send ( net, to, value, priv_key, nonce, fee, data ):
     pub_key = get_public_key ( priv_key )
-    prv_der_ascii = dmp_prv_der ( priv_key )
     pub_der_ascii = dmp_pub_der ( pub_key )
-#    print (prv_der_ascii)
 
     byte_data = str.encode ( data )
     hex_data = binascii.hexlify ( byte_data )
     dataHex = hex_data.decode ()
     fee = len(dataHex)
     sign = get_sign ( to, value, fee, nonce, dataHex, priv_key )
-#    sign = '3044022079f62b9c3166c38c2a8baa4dd4e31681cf8aace1a092dfabc469398aa9c8367502207c24a84d6d417d99d23f549f391f2ca2ece997869b10852e2d18c18886f6eea6'
-    print ( sign )
 
     req = {'id':1,'method':'mhc_send','params':{'to':to,'value':value,'fee':str(fee),'nonce':str(nonce),'data':dataHex,'pubkey':pub_der_ascii,'sign':sign}}
     print (json.dumps(req))
