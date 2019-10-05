@@ -23,7 +23,6 @@ value = '0'
 fee = '0'
 nonce = metahash.fetch_balance( net, address )['result']['count_spent'] + 1
 data = '{"method":"delegate","params":{"value":"'+str(bal)+'"}}'
-print (data)
 res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
 result = json.dumps ( res )
 print ( result )
