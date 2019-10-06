@@ -8,7 +8,7 @@ from getpass import getpass
 net = 'main'
 address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
 #passwd = '12345' # for *.ec.priv
-passwd = getpass ("paasword: ")
+passwd = getpass ("password:") # for *.ec.priv
 ################################################
 # for Metagate Key
 f = open ( address+".ec.priv" )
