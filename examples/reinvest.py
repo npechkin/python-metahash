@@ -8,8 +8,8 @@ from getpass import getpass
 ################################################
 net = 'main'
 address = '0x00'
-#passwd = '12345' # for *.ec.priv
 passwd = getpass ("password: ")
+#passwd = '12345' # for *.ec.priv
 node = '0x00f0bec7a7b832d4400455229103c6cec3abd6736f60152b6d'
 ################################################
 # for Metagate Key
