@@ -7,8 +7,8 @@ from getpass import getpass
 ################################################
 net = 'main'
 address = '0x00'
-passwd = '12345' # for *.ec.priv
-#passwd = getpass ("paasword: ")
+passwd = getpass ("password: ")
+#passwd = '12345' # for *.ec.priv
 val = '0' # 1 MHC = 1000000; IF 0 THEN DELEGATE ALL
 node = '0x00f0bec7a7b832d4400455229103c6cec3abd6736f60152b6d'
 ################################################
