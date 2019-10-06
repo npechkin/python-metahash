@@ -8,8 +8,8 @@ from getpass import getpass
 ################################################
 net = 'main'
 address = '0x00'
-passwd = '12345' # for *.ec.priv
-#passwd = getpass ("password:") # for *.ec.priv
+#passwd = '12345' # for *.ec.priv
+passwd = getpass ("password:") # for *.ec.priv
 value = '0' # 1 MHC = 1000000
 to = '0x0088825ae25e516a34cb94bada9b25a811213b55ae3160c888'
 
