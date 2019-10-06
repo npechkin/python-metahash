@@ -7,8 +7,8 @@ from getpass import getpass
 ################################################
 net = 'main'
 address = '0x00ffaca83513356a14d91f95f46a40aa73b06d5f32359de1d0'
-passwd = getpass ("password:") # for *.ec.priv
 #passwd = '12345' # for *.ec.priv
+passwd = getpass ("password:") # for *.ec.priv
 ##############  KEY GENERATE  ##################
 #priv_key = metahash.generate ()
 #################  KEY LOAD   ##################
