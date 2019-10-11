@@ -40,7 +40,7 @@ priv_key = metahash.generate ()
 pub_key = metahash.get_public_key ( priv_key )
 ##############  GET ADDRESS   ###################
 address = metahash.get_address ( pub_key )
-#print ( address )
+print ( address )
 #################  KEY DUMP   ##################
 
 ## PEM private key
