@@ -13,7 +13,7 @@ passwd = getpass ("password: ") # for *.ec.priv
 node = '0x00f0bec7a7b832d4400455229103c6cec3abd6736f60152b6d'
 amount = '0' # 0 = ALL
 ################################################
-f = open ( "keys/"+address+".ec.priv" )
+f = open ( address+".ec.priv" )
 ec_prv_pem_ascii = f.read()
 priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
 ################################################
