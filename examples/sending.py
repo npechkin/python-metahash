@@ -20,6 +20,7 @@ if value == '0':
     balance = metahash.fetch_balance(net,address)['result']
     bal = (balance['received'] - balance['spent'])
     if bal == 0:
+        print ("Balance = 0. Exiting.")
         sys.exit()
     value = str(bal)
 print ("Sending",value,"MHC to", to)
