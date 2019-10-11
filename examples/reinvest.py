@@ -25,7 +25,7 @@ bal = balance['received'] - balance['spent']
 if bal == 0:
     print ("Balance = 0. Exiting.")
     sys.exit()
-print ("Balance =",bal,"MHC. Undelegating.")
+print ("Balance =",str(bal),"MHC. Undelegating.")
 nonce = balance['count_spent'] + 1
 data = '{"method":"undelegate"}'
 res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
