@@ -40,7 +40,7 @@ if amount == '0':
         print ("Balance = 0. Exiting.")
         sys.exit()
     amount = str(bal)
-print ("Balance =",bal,"MHC. Delegating.")
+print ("Balance =",str(bal/1000000),"MHC. Delegating.")
 nonce = nonce + 1
 data = '{"method":"delegate","params":{"value":"'+str(bal)+'"}}'
 res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
