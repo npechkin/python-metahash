@@ -27,7 +27,7 @@ if int(val) > 0 & int(val) < 512000000:
     print ("You can not delegate less than 512 MHC. Exit.")
     sys.exit ()
 if bal < int(val):
-    print ("Balance =",bal/1000000,"MHC.",val/1000000,"MHC cannot be sent. Exit.")
+    print ("Balance =",bal/1000000,"MHC.",int(val)/1000000,"MHC cannot be sent. Exit.")
     sys.exit()
 if val == '0':
     val = str(bal)
