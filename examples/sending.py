@@ -12,7 +12,7 @@ passwd = getpass ("password:") # for *.ec.priv
 to = '0x00'
 value = '0' # if 0 send ALL
 #################  KEY LOAD   ##################
-f = open("keys/"+address+".ec.priv","r")
+f = open(address+".ec.priv","r")
 ec_prv_pem_ascii = f.read()
 priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
 ##################   SEND MHC   ###################
