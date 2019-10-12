@@ -33,16 +33,13 @@ result = json.dumps ( res )
 print ( result )
 print ("Wait 5 second...")
 time.sleep (5)
+balance = metahash.fetch_balance ( net, address )['result']
+bal = balance['received'] - balance['spent']
 if amount == '0':
-    balance = metahash.fetch_balance ( net, address )['result']
-    bal = balance['received'] - balance['spent']
-    if bal == 0:
-        print ("Balance = 0. Exiting.")
-        sys.exit()
     amount = str(bal)
-print ("Balance =",str(bal/1000000),"MHC. Delegating.")
+print ("Balance =",str(int(amount)/1000000),"MHC. Delegating.")
 nonce = nonce + 1
-data = '{"method":"delegate","params":{"value":"'+str(bal)+'"}}'
+data = '{"method":"delegate","params":{"value":"'+amount+'"}}'
 res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
 result = json.dumps ( res )
 print ( result )
