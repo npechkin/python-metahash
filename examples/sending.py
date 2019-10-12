@@ -23,7 +23,7 @@ if value == '0':
         print ("Balance = 0. Exiting.")
         sys.exit()
     value = str(bal)
-print ("Sending",value,"MHC to", to)
+print ("Sending",str(int(value)/1000000),"MHC to", to)
 fee = 0
 nonce = balance['count_spent'] + 1
 data = ''
