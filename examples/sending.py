@@ -22,7 +22,7 @@ if bal == 0:
     print ("Balance = 0. Exiting.")
     sys.exit()
 if bal < int(value):
-    print("Balance <",value,"Exiting.")
+    print("Balance <",str(int(value)/1000000),"Exiting.")
     sys.exit()
 if value == '0':
     value = str(bal)
