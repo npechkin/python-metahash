@@ -18,10 +18,13 @@ priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
 ##################   SEND MHC   ###################
 balance = metahash.fetch_balance(net,address)['result']
 bal = (balance['received'] - balance['spent'])
+if bal == 0:
+    print ("Balance = 0. Exiting.")
+    sys.exit()
+if bal < int(value):
+    print("Balance <",value,"Exiting.")
+    sys.exit()
 if value == '0':
-    if bal == 0:
-        print ("Balance = 0. Exiting.")
-        sys.exit()
     value = str(bal)
 print ("Sending",str(int(value)/1000000),"MHC to", to)
 fee = 0
