@@ -16,9 +16,9 @@ f = open(address+".ec.priv","r")
 ec_prv_pem_ascii = f.read()
 priv_key = metahash.get_ec_prv_pem ( ec_prv_pem_ascii, passwd )
 ##################   SEND MHC   ###################
+balance = metahash.fetch_balance(net,address)['result']
+bal = (balance['received'] - balance['spent'])
 if value == '0':
-    balance = metahash.fetch_balance(net,address)['result']
-    bal = (balance['received'] - balance['spent'])
     if bal == 0:
         print ("Balance = 0. Exiting.")
         sys.exit()
