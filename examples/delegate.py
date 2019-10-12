@@ -9,7 +9,7 @@ net = 'main'
 address = '0x00'
 #passwd = '12345' # for *.ec.priv
 passwd = getpass ("password: ") # for *.ec.priv
-val = '0' # 1 MHC = 1000000; IF 0 THEN DELEGATE ALL
+amount = '0' # 1 MHC = 1000000; IF 0 THEN DELEGATE ALL
 node = '0x00f0bec7a7b832d4400455229103c6cec3abd6736f60152b6d'
 ################################################
 # for Metagate Key
@@ -23,18 +23,19 @@ bal = balance['received'] - balance['spent']
 if bal < 512000000:
     print ("Balance less than 512 MHC. Exit.")
     sys.exit ()
-if int(val) > 0 & int(val) < 512000000:
-    print ("You can not delegate less than 512 MHC. Exit.")
-    sys.exit ()
-if bal < int(val):
-    print ("Balance =",str(bal/1000000),"MHC.",str(int(val)/1000000),"MHC cannot be sent. Exit.")
+if int(amount) > 0:
+    if int(amount) < 512000000:
+        print ("You can not delegate less than 512 MHC. Exit.")
+        sys.exit ()
+if bal < int(amount):
+    print ("Balance =",str(bal/1000000),"MHC.",str(int(amount)/1000000),"MHC cannot be sent. Exit.")
     sys.exit()
-if val == '0':
-    val = str(bal)
+if amount == '0':
+    amount = str(bal)
 value = '0'
 fee = '0'
 nonce = balance['count_spent'] + 1
-data = '{"method":"delegate","params":{"value":"'+val+'"}}'
+data = '{"method":"delegate","params":{"value":"'+amount+'"}}'
 print (data)
 res = metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
 result = json.dumps ( res )
