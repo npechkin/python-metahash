@@ -121,7 +121,7 @@ def get_address ( pub_key ):
 
 def torrent_request ( net, request ):
     url = 'http://tor.net-'+net+'.metahashnetwork.com:5795'
-    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'}
+    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     res = requests.post ( url, data, headers = headers )
     result = json.loads ( res.text )
@@ -129,7 +129,7 @@ def torrent_request ( net, request ):
 
 def proxy_request ( net, request ):
     url = 'http://proxy.net-'+net+'.metahashnetwork.com:9999'
-    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'}
+    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive'}
     data = json.dumps ( request )
     res = requests.post ( url, data, headers = headers )
     result = json.loads ( res.text )
@@ -144,6 +144,11 @@ def fetch_history ( net, address, beginTx, countTxs ):
     request = {'id':1,'method':'fetch-history','params':{'address':address,'beginTx':beginTx,'countTxs':countTxs}}
     history = torrent_request ( net, request )
     return ( history )
+
+def get_address_delegations ( net, address, beginTx, countTxs ):
+    request = {'id':1,'method':'get-address-delegations','params':{'address':address,'beginTx':beginTx,'countTxs':countTxs}}
+    delegations = torrent_request ( net, request )
+    return ( delegations )
 
 def get_tx ( net, txhash ):
     request = {'id':1,'method':'get-tx','params':{'hash':txhash}}

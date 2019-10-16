@@ -42,6 +42,8 @@ JSON query
 
 +    metahash.fetch_history ( net, address, beginTx, countTxs )
 
++    metahash.get_address_delegations ( net, address, beginTx, countTxs )
+
 +    metahash.get_tx ( net, txhash )
 
 +    metahash.get_block_by_hash ( net, bkhash, type, beginTx, countTxs )
