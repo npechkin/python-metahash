@@ -14,7 +14,7 @@ deleg = (balance['delegate'] - balance['undelegate'])/1000000
 nonce = balance['count_spent'] + 1
 beginTx = 0
 countTxs = 10
-delegations = metahash.get_address_delegations( net, address, beginTx, countTxs )['result']
+delegations = metahash.get_address_delegations( net, address, beginTx, countTxs )['result']['states']
 
 print ("Balance =",bal,"MHC. Frozen in delegations",deleg,"MHC. nonce =",nonce)
 print ("Delegations count",str(len(delegations)+1),"(from 256)")
