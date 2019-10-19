@@ -120,18 +120,36 @@ def get_address ( pub_key ):
     return ( address )
 
 def torrent_request ( net, request ):
-    url = 'http://tor.net-'+net+'.metahashnetwork.com:5795'
+    import socket
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
-    res = requests.post ( url, data, headers = headers )
+    tors = socket.gethostbyname_ex ( 'tor.net-'+net+'.metahashnetwork.com' )[2]
+    i = 0
+    while i < len(tors):
+        url = 'http://'+tors[i]+':5795'
+        try:
+            res = requests.post ( url, data, headers = headers )
+            break
+        except requests.exceptions.ConnectionError:
+            print ("Try",i+1,"bad torrent",tors[i])
+            i += 1
     result = json.loads ( res.text )
     return ( result )
 
 def proxy_request ( net, request ):
-    url = 'http://proxy.net-'+net+'.metahashnetwork.com:9999'
-    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive'}
+    import socket
+    headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
-    res = requests.post ( url, data, headers = headers )
+    prxs = socket.gethostbyname_ex ( 'proxy.net-'+net+'.metahashnetwork.com' )[2]
+    i = 0
+    while i < len(prxs):
+        url = 'http://'+prxs[i]+':9999'
+        try:
+            res = requests.post ( url, data, headers = headers )
+            break
+        except requests.exceptions.ConnectionError:
+            print ("Try",i+1,"bad proxy",prxs[i])
+            i += 1
     result = json.loads ( res.text )
     return ( result )
 
