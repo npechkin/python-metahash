@@ -9,8 +9,7 @@ net = 'main'
 address = '0x00'
 #passwd = '12345' # for *.ec.priv
 passwd = getpass ("password:") # for *.ec.priv
-##############  KEY GENERATE  ##################
-priv_key = metahash.generate ()
+
 #################  KEY LOAD   ##################
 ## EC PEM private key
 f = open ( address+".ec.priv" )
