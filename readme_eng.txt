@@ -24,6 +24,7 @@ sending will not work and the script will display an error message.
 
 balance.py - checks balance.
 delegate.py - delegates funds to a node (if not specified how much then delegates everything).
+ecpriv_to_der.py - convert *.ec.priv to DER key (for nodes)
 example.py - examples of using various library functions. Default - generate new address.
 reinvest.py - removes the last transaction from the delegation and delegates all funds to the node.
 sending.py - sending MHC to the selected address.
