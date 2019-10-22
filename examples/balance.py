@@ -16,5 +16,5 @@ beginTx = 0
 countTxs = 256
 delegations = metahash.get_address_delegations( net, address, beginTx, countTxs )['result']['states']
 
-print ("Balance =",bal,"MHC. Frozen in delegations",deleg,"MHC. nonce =",nonce)
-print ("Delegations count",str(len(delegations)),"from 256")
+print ("Balance =",bal,"MHC. nonce =",nonce)
+print ("Frozen in delegations",deleg,"MHC. Delegations count",str(len(delegations)),"from 256.")
