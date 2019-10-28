@@ -30,3 +30,6 @@ reinvest.py - removes the last transaction from the delegation and delegates all
 sending.py - sending MHC to the selected address.
 undelegate.py - removes the last trans from the delegation.
 undelegate_self.py - if you delegated to yourself (an error in Metagate) then removes this trans.
+
+If these scripts have helped you, then your thanks are accepted at
+MHC 0x00abcdef1010eddde8a7387777f73fae30d34971e9df535153.
