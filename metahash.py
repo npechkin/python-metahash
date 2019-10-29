@@ -142,7 +142,7 @@ def torrent_request ( net, request ):
 
 def proxy_request ( net, request ):
     import socket
-    bad_prxs=('206.189.13.155','139.162.157.232','')
+    bad_prxs=('206.189.13.155','139.162.157.232','206.189.13.140','172.104.239.101')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     prxs = socket.gethostbyname_ex ( 'proxy.net-'+net+'.metahashnetwork.com' )[2]
