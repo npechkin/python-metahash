@@ -9,6 +9,7 @@ import hashlib
 import random
 import json
 import binascii
+import socket
 
 try:
     from cryptography.hazmat.backends import default_backend
@@ -120,7 +121,6 @@ def get_address ( pub_key ):
     return ( address )
 
 def torrent_request ( net, request ):
-    import socket
     bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
@@ -141,7 +141,6 @@ def torrent_request ( net, request ):
     return ( result )
 
 def proxy_request ( net, request ):
-    import socket
     bad_prxs=('206.189.13.155','139.162.157.232','206.189.13.140','172.104.239.101')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
