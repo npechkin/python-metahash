@@ -121,7 +121,8 @@ def get_address ( pub_key ):
     return ( address )
 
 def torrent_request ( net, request ):
-    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103')
+#    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103') # for Russia
+    bad_tors=('','','')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     tors = socket.gethostbyname_ex ( 'tor.net-'+net+'.metahashnetwork.com' )[2]
@@ -141,7 +142,8 @@ def torrent_request ( net, request ):
     return ( result )
 
 def proxy_request ( net, request ):
-    bad_prxs=('206.189.13.155','139.162.157.232','206.189.13.140','172.104.239.101')
+#    bad_prxs=('206.189.13.155','139.162.157.232','206.189.13.140','172.104.239.101') # for Russia
+    bad_prxs=('','','')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     prxs = socket.gethostbyname_ex ( 'proxy.net-'+net+'.metahashnetwork.com' )[2]
