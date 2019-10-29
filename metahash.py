@@ -121,6 +121,7 @@ def get_address ( pub_key ):
 
 def torrent_request ( net, request ):
     import socket
+    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     tors = socket.gethostbyname_ex ( 'tor.net-'+net+'.metahashnetwork.com' )[2]
@@ -128,8 +129,11 @@ def torrent_request ( net, request ):
     while i < len(tors):
         url = 'http://'+tors[i]+':5795'
         try:
-            res = requests.post ( url, data, headers = headers )
-            break
+            if tors[i] not in bad_tors:
+                res = requests.post ( url, data, headers = headers )
+                break
+            else:
+               i += 1
         except requests.exceptions.ConnectionError:
             print ("Try",i+1,"bad torrent",tors[i])
             i += 1
@@ -138,6 +142,7 @@ def torrent_request ( net, request ):
 
 def proxy_request ( net, request ):
     import socket
+    bad_prxs=('206.189.13.155','139.162.157.232','')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     prxs = socket.gethostbyname_ex ( 'proxy.net-'+net+'.metahashnetwork.com' )[2]
@@ -145,8 +150,11 @@ def proxy_request ( net, request ):
     while i < len(prxs):
         url = 'http://'+prxs[i]+':9999'
         try:
-            res = requests.post ( url, data, headers = headers )
-            break
+            if prxs[i] not in bad_prxs:
+                res = requests.post ( url, data, headers = headers )
+                break
+            else:
+               i += 1
         except requests.exceptions.ConnectionError:
             print ("Try",i+1,"bad proxy",prxs[i])
             i += 1
@@ -182,6 +190,11 @@ def get_block_by_number ( net, block_number, typ, beginTx, countTxs ):
     request = {'id':1,'method':'get-block-by-number','params':{'number':block_number,'type':typ,'beginTx':beginTx,'countTxs':countTxs}}
     response = torrent_request ( net, request )
     return ( response )
+
+def get_last_node_stat_result ( net, address ):
+    request = {'id':1,'method':'get-last-node-stat-result','params':{'address':address}}
+    node_stat = torrent_request ( net, request )
+    return ( node_stat )
 
 def little_ending ( bytes ):
     res_str = ''
