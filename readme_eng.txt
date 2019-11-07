@@ -1,6 +1,7 @@
 Installation.
 
 Download python on python.org and install. Recomendate version 3.7.5
+https://www.python.org/ftp/python/3.7.5/python-3.7.5-amd64.exe
 When installing, select "for all users" and "register path"
 Copy the metahash.py library to the lib folder where python got up.
 For ease of use, it is also recommended to install Far manager.
