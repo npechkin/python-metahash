@@ -50,6 +50,8 @@ JSON query
 
 +    metahash.get_block_by_number ( net, block_number, type, beginTx, countTxs )
 
++    metahash.get_last_node_stat_result ( net, address )
+
 Sending MHC
 
 +    metahash.mhc_send ( net, to, value, fee, nonce, data, priv_key )
