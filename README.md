@@ -42,6 +42,8 @@ JSON query
 
 +    metahash.fetch_history ( net, address, beginTx, countTxs )
 
++    metahash.fetch_all_history ( net, address )
+
 +    metahash.get_address_delegations ( net, address, beginTx, countTxs )
 
 +    metahash.get_tx ( net, txhash )
@@ -51,6 +53,8 @@ JSON query
 +    metahash.get_block_by_number ( net, block_number, type, beginTx, countTxs )
 
 +    metahash.get_last_node_stat_result ( net, address )
+
++    metahash.get_all_last_nodes_count ( net )
 
 Sending MHC
 
