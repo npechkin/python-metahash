@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+﻿#!/usr/bin/python3
 
 import os
 import sys
@@ -121,18 +121,21 @@ def get_address ( pub_key ):
     return ( address )
 
 def torrent_request ( net, request ):
-#    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103') # for Russia
-    bad_tors=('','','')
+#    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103','139.162.171.234','95.179.136.28','172.104.157.248','52.221.238.117')
+    bad_tors=('172.104.248.78','139.162.161.88','172.104.153.103','172.104.157.248')
+#    bad_tors=('','','')
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     tors = socket.gethostbyname_ex ( 'tor.net-'+net+'.metahashnetwork.com' )[2]
     i = 0
+#    print (len(tors))
     while i < len(tors):
         url = 'http://'+tors[i]+':5795'
         try:
             if tors[i] not in bad_tors:
                 res = requests.post ( url, data, headers = headers )
                 break
+#                i += 1
             else:
                i += 1
         except requests.exceptions.ConnectionError:
@@ -142,18 +145,19 @@ def torrent_request ( net, request ):
     return ( result )
 
 def proxy_request ( net, request ):
-#    bad_prxs=('206.189.13.155','139.162.157.232','206.189.13.140','172.104.239.101') # for Russia
-    bad_prxs=('','','')
+    bad_prxs=('','','')    
     headers = {'Content-Type': 'application/json', 'Accept': 'text/plain', 'Accept-Encoding': '*', 'Connection': 'keep-alive' }
     data = json.dumps ( request )
     prxs = socket.gethostbyname_ex ( 'proxy.net-'+net+'.metahashnetwork.com' )[2]
     i = 0
+#    print (len(prxs))
     while i < len(prxs):
         url = 'http://'+prxs[i]+':9999'
         try:
             if prxs[i] not in bad_prxs:
                 res = requests.post ( url, data, headers = headers )
                 break
+#                i += 1
             else:
                i += 1
         except requests.exceptions.ConnectionError:
@@ -170,6 +174,21 @@ def fetch_balance ( net, address ):
 def fetch_history ( net, address, beginTx, countTxs ):
     request = {'id':1,'method':'fetch-history','params':{'address':address,'beginTx':beginTx,'countTxs':countTxs}}
     history = torrent_request ( net, request )
+    return ( history )
+
+def fetch_all_history ( net, address ):
+    t = 1
+    beginTx = 0
+    countTx = 9999
+    history = fetch_history(net,address,beginTx,countTx)
+    k = len(history)
+    if k == 9999:
+        while k == 9999:
+            beginTx = t*9999
+            hisT = fetch_history(net,address,beginTx,countTx)
+            history = history + hisT
+            k = len(hisT)
+            t = t+1
     return ( history )
 
 def get_address_delegations ( net, address, beginTx, countTxs ):
@@ -196,6 +215,11 @@ def get_last_node_stat_result ( net, address ):
     request = {'id':1,'method':'get-last-node-stat-result','params':{'address':address}}
     node_stat = torrent_request ( net, request )
     return ( node_stat )
+
+def get_all_last_nodes_count (net):
+    request = {'id':1,'method':'get-all-last-nodes-count','params':{'count_tests':10}}
+    response = torrent_request ( net, request )
+    return ( response )
 
 def little_ending ( bytes ):
     res_str = ''
