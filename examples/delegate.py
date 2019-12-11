@@ -10,7 +10,7 @@ address = '0x00'
 #passwd = '12345' # for *.ec.priv
 passwd = getpass ("password: ") # for *.ec.priv
 amount = '0' # 1 MHC = 1000000; IF 0 THEN DELEGATE ALL
-node = '0x00f0bec7a7b832d4400455229103c6cec3abd6736f60152b6d'
+node = '0x00123456bea359caad6bee3903417b3fbdf0fb082e02ac039e'
 ################################################
 # for Metagate Key
 f = open ( address+".ec.priv" )
